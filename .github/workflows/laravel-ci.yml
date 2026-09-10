@@ -116,8 +116,10 @@ jobs:
     # لا يبدأ Deploy إلا إذا نجح test
     needs: test
 
-    runs-on: ubuntu-latest
+    # Deploy فقط عند Push مباشر إلى main
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
 
+    runs-on: ubuntu-latest
 
     steps:
 
@@ -146,4 +148,4 @@ jobs:
             -i ~/.ssh/deploy_key \
             -o IdentitiesOnly=yes \
             deploy@${{ vars.SERVER_HOST }} \
-            "/var/www/myapp/deploy.sh"
+            "/var/www/myapp/deploy.sh ${{ github.sha }}"

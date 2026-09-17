@@ -1,0 +1,41 @@
+name: Production Deployment
+
+on:
+  push:
+    branches:
+      - main
+
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  test:
+    name: Test Laravel Application
+    runs-on: ubuntu-latest
+
+    steps:
+
+      # 1. Checkout
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # 2. Setup PHP 8.3
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          extensions: mbstring, bcmath, pdo_sqlite
+          coverage: none
+
+      # 3. Install Composer dependencies
+      - name: Install Composer dependencies
+        run: composer install --no-interaction --prefer-dist --optimize-autoloader
+
+      # 4. Run PHPUnit
+      - name: Run PHPUnit
+        run: php artisan test
+
+      # 5. Run Laravel Pint
+      - name: Run Laravel Pint
+        run: vendor/bin/pint --test

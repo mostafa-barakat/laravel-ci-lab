@@ -117,7 +117,7 @@ jobs:
     needs: test
 
     # Deploy فقط عند Push مباشر إلى main
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    if: ${{ false }}
 
     runs-on: ubuntu-latest
 
